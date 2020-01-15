@@ -1,59 +1,102 @@
 from datetime import time
 
+import json
+
 import tweepy as tw
 import credentials as cred
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 
-class listener(StreamListener):
+from time import sleep
+import tellopy
 
-    def on_data(self, data):
+def handler(event, sender, data, **args):
+    drone = sender
+    if event is drone.EVENT_FLIGHT_DATA:
         print(data)
-        return(True)
+# drone = tellopy.Tello()
+try:
+    # drone.subscribe(drone.EVENT_FLIGHT_DATA, handler)
+    # drone.connect()
+    # drone.wait_for_connection(60.0)
 
-    def on_error(self, status):
-        print ("error")
-        print (status)
+    # def controller(command,value):
+    #     if command == "takeoff":
+    #         print("takeoff")
+    #     elif command == "land":
+    #         print("land")
+    #     elif command == "up":
+    #         print("up",value) 
+    #     elif command == "down":
+    #         print("down",value)
+    #     elif command == "left":
+    #         print("left",value)
+    #     elif command == "right":
+    #         print("right",value)
+    #     elif command == "forward":
+    #         print("forward",value)
+    #     elif command == "back":
+    #         print("back",value)
+    #     elif command == "cw":
+    #         print("cw",value)
+    #     elif command == "ccw":
+    #         print("ccw",value)
+    #     elif command == "speed":
+    #         print("speed",value)
+    #     else:
+    #         print("failure")
 
-auth = OAuthHandler(cred.CONSUMER_KEY, cred.CONSUMER_SECRET)
-auth.set_access_token(cred.ACCESS_TOKEN, cred.ACCESS_SECRET)
-
-twitterStream = Stream(auth, listener())
-twitterStream.filter(track=["#hwu2020tello"])
-
-
-# auth = tw.OAuthHandler(consumer_key, consumer_secret)
-# auth.set_access_token(access_token, access_secret)
-# api = tw.API(auth)
-
-# tweets = []
-# username = 'raptorisonline'
-# count = 100
-# for tweet in api.user_timeline(id=username, count=count):
-#     tweets.append(tweet.text)
-# for tweet in tweets:
-#     print(tweet)
-#     print("...........................................................................................................")
-
-# search_words = "#martingarrix"
-# date_since = "2020-01-12"
-#
-# tweets = tw.Cursor(api.search, q=search_words, lang="en", since=date_since).items(100)
-#
-# # for tweet in tweets:
-# #     print(tweet.text)
-# #     print("...........................................................................................................")
-
-#
-# target = 'BrendenMonteiro'
-# print("Getting data for " + target)
-# item = api.get_user(target)
-# print("name: " + item.name)
-# print("screen_name: " + item.screen_name)
-# print("description: " + item.description)
-# print("statuses_count: " + str(item.statuses_count))
-# print("friends_count: " + str(item.friends_count))
-# print("followers_count: " + str(item.followers_count))
+    def controller(command,value):
+        if command == "takeoff":
+            drone.takeoff()
+        elif command == "land":
+            drone.land()
+        elif command == "up":
+            drone.up(value)
+        elif command == "down":
+            drone.down(value)
+        elif command == "left":
+            drone.left(value)
+        elif command == "right":
+            drone.right(value)
+        elif command == "forward":
+            drone.forward(value)
+        elif command == "back":
+            drone.backward(value)
+        elif command == "cw":
+            drone.clockwise(value)
+        elif command == "ccw":
+            drone.counter_clockwise(value)
+        elif command == "palmland":
+            drone.palm_land()
+        else:
+            print("failure")
 
 
+    def inputHandler(input):
+        command=input
+        value=0
+        controller(command,value)
+
+    class listener(StreamListener):
+
+        def on_data(self, data):
+            tweetjson=json.loads(data)
+            inputHandler(tweetjson["text"])
+            return(True)
+
+        def on_error(self, status):
+            print ("error")
+            print (status)
+
+    auth = OAuthHandler(cred.CONSUMER_KEY, cred.CONSUMER_SECRET)
+    auth.set_access_token(cred.ACCESS_TOKEN, cred.ACCESS_SECRET)
+
+    twitterStream = Stream(auth, listener())
+    twitterStream.filter(follow=["4888927145"])
+
+except Exception as ex:
+    print(ex)
+finally:
+    drone.quit()
