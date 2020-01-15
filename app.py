@@ -1,12 +1,7 @@
 from datetime import time
 
 import tweepy as tw
-
-consumer_key = 'R0CMif2aZNAaYHxlZq1c2W9Ks'
-consumer_secret = 'T0ynpdzVZxsSnCGzMoRoBjvBRzOCpj2MFb6DKSAgGiRZTGYCr4'
-access_token = '1216609358513164288-NvkEo8VLra283rXQOVYGeIUam4s5SY'
-access_secret = 'NX2UikUF2EcOFJ4TGtE7J2XwhGiwJlouulm2Dvtee1qc2'
-
+import credentials as cred
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -21,8 +16,8 @@ class listener(StreamListener):
         print ("error")
         print (status)
 
-auth = OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_secret)
+auth = OAuthHandler(cred.CONSUMER_KEY, cred.CONSUMER_SECRET)
+auth.set_access_token(cred.ACCESS_TOKEN, cred.ACCESS_SECRET)
 
 twitterStream = Stream(auth, listener())
 twitterStream.filter(track=["#hwu2020tello"])
