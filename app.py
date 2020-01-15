@@ -7,18 +7,39 @@ consumer_secret = 'T0ynpdzVZxsSnCGzMoRoBjvBRzOCpj2MFb6DKSAgGiRZTGYCr4'
 access_token = '1216609358513164288-NvkEo8VLra283rXQOVYGeIUam4s5SY'
 access_secret = 'NX2UikUF2EcOFJ4TGtE7J2XwhGiwJlouulm2Dvtee1qc2'
 
-auth = tw.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_secret)
-api = tw.API(auth)
+from tweepy import Stream
+from tweepy import OAuthHandler
+from tweepy.streaming import StreamListener
 
-tweets = []
-username = 'de_vishan'
-count = 100
-for tweet in api.user_timeline(id=username, count=count):
-    tweets.append(tweet.text)
-for tweet in tweets:
-    print(tweet)
-    print("...........................................................................................................")
+class listener(StreamListener):
+
+    def on_data(self, data):
+        print(data)
+        return(True)
+
+    def on_error(self, status):
+        print ("error")
+        print (status)
+
+auth = OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_secret)
+
+twitterStream = Stream(auth, listener())
+twitterStream.filter(track=["#hwu2020tello"])
+
+
+# auth = tw.OAuthHandler(consumer_key, consumer_secret)
+# auth.set_access_token(access_token, access_secret)
+# api = tw.API(auth)
+
+# tweets = []
+# username = 'raptorisonline'
+# count = 100
+# for tweet in api.user_timeline(id=username, count=count):
+#     tweets.append(tweet.text)
+# for tweet in tweets:
+#     print(tweet)
+#     print("...........................................................................................................")
 
 # search_words = "#martingarrix"
 # date_since = "2020-01-12"
