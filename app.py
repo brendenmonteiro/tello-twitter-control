@@ -21,60 +21,46 @@ try:
     # drone.connect()
     # drone.wait_for_connection(60.0)
 
-    # def controller(command,value):
-    #     if command == "takeoff":
-    #         print("takeoff")
-    #     elif command == "land":
-    #         print("land")
-    #     elif command == "up":
-    #         print("up",value) 
-    #     elif command == "down":
-    #         print("down",value)
-    #     elif command == "left":
-    #         print("left",value)
-    #     elif command == "right":
-    #         print("right",value)
-    #     elif command == "forward":
-    #         print("forward",value)
-    #     elif command == "back":
-    #         print("back",value)
-    #     elif command == "cw":
-    #         print("cw",value)
-    #     elif command == "ccw":
-    #         print("ccw",value)
-    #     elif command == "speed":
-    #         print("speed",value)
-    #     else:
-    #         print("failure")
-
     def controller(command,value):
         if command == "takeoff":
             drone.takeoff()
+            print("takeoff")
         elif command == "land":
             drone.land()
+            print("land")
         elif command == "up":
             drone.up(value)
+            print("up",value)
         elif command == "down":
             drone.down(value)
+            print("down",value)
         elif command == "left":
             drone.left(value)
+            print("left",value)
         elif command == "right":
             drone.right(value)
+            print("right",value)
         elif command == "forward":
             drone.forward(value)
+            print("forward",value)
         elif command == "back":
             drone.backward(value)
+            print("back",value)
         elif command == "cw":
             drone.clockwise(value)
+            print("cw",value)
         elif command == "ccw":
             drone.counter_clockwise(value)
+            print("ccw",value)
         elif command == "palmland":
             drone.palm_land()
+            print("palm_land")
         else:
             print("failure")
 
 
     def inputHandler(input):
+        input = input.rstrip()
         command=input
         value=0
         controller(command,value)
