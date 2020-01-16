@@ -61,6 +61,7 @@ try:
 
     def inputHandler(input):
         input = input.rstrip()
+        input = input.lower()
         command=input
         value=0
         controller(command,value)
